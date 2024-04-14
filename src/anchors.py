@@ -48,7 +48,7 @@ def generate_default_anchor_maps(
         aspect_ratios = anchor_info["aspect_ratio"]
 
         output_map_shape = np.ceil(input_shape.astype(np.float32) / stride)
-        output_map_shape = output_map_shape.astype(np.int)
+        output_map_shape = output_map_shape.astype(int)
         output_shape = tuple(output_map_shape) + (4,)
         ostart = stride / 2.0
         oy = np.arange(ostart, ostart + stride * output_shape[0], stride)
@@ -132,7 +132,7 @@ def cdds2attention_map(top_n_cdds):
         MAX_x = 0
         SUM = top_n_cdds[i][:, 0].sum()
         for j in range(3):
-            [y0, x0, y1, x1] = top_n_cdds[i][j, 1:5].astype(np.int)
+            [y0, x0, y1, x1] = top_n_cdds[i][j, 1:5].astype(int)
             y0, x0, y1, x1 = get_xy(y0, x0, y1, x1)
             y0 = y0 - 224
             x0 = x0 - 224
@@ -148,7 +148,7 @@ def cdds2attention_map(top_n_cdds):
                 MAX_x = x1
             att_map[y0:y1, x0:x1] += top_n_cdds[i][j][0] / SUM
         attention_box_lst.append(
-            [np.int(MIN_y * c), np.int(MIN_x * c), np.int(MAX_y * c), np.int(MAX_x * c)]
+            [int(MIN_y * c), int(MIN_x * c), int(MAX_y * c), int(MAX_x * c)]
         )
         attention_map_lst.append(att_map)
     return attention_box_lst, attention_map_lst
