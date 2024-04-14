@@ -1,6 +1,8 @@
 import torch
 from torch.autograd import Variable
 
+PROPOSAL_NUM = 6
+
 def list_loss(logits, targets):
     temp = F.log_softmax(logits, -1)
     loss = [-temp[i][targets[i].item()] for i in range(logits.size(0))]
