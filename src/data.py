@@ -6,7 +6,7 @@ from PIL import Image
 from torchvision import transforms
 
 class SARS:
-    def __init__(self, root, is_train=True):
+    def __init__(self, root, is_train=True, resnet=False):
         self.is_train = is_train
 
         path = f"{root}/no_nCoV"
@@ -25,6 +25,7 @@ class SARS:
         self.label_lst = [item[1] for item in temp]
         self.people_lst = [item[2] for item in temp]
         self.file_name = [item.split("/")[-1] for item in self.file_lst]
+        self.resize_dim = (224, 224) if resnet else (448, 448)
 
     def __getitem__(self, index):
         flg_H = 0
@@ -34,7 +35,7 @@ class SARS:
             img = np.stack([img] * 3, 2)
         img_raw = img.copy()
         img = Image.fromarray(img, mode="RGB")
-        img = transforms.Resize((448, 448), Image.BILINEAR)(img)
+        img = transforms.Resize(self.resize_dim, Image.BILINEAR)(img)
         if self.is_train:
             if np.random.randint(2) == 1:
                 flg_H = 1
